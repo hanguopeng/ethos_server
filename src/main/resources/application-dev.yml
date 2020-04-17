@@ -1,0 +1,42 @@
+spring:
+    datasource:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: oracle.jdbc.OracleDriver
+        druid:
+            first:  #数据源1
+                url: jdbc:oracle:thin:@111.26.165.96:11521:orcl
+                username: industry_ethos
+                password: ethos_123
+#                url: jdbc:oracle:thin:@192.168.1.130:1521:orcl
+#                username: thman
+#                password: th_cmc_man
+            second:  #数据源2
+                url: jdbc:oracle:thin:@111.26.165.96:11521:orcl
+                username: industry_ethos
+                password: ethos_123
+#                url: jdbc:oracle:thin:@192.168.1.130:1521:orcl
+#                username: thman
+#                password: th_cmc_man
+            initial-size: 10
+            max-active: 100
+            min-idle: 10
+            max-wait: 60000
+            pool-prepared-statements: true
+            max-pool-prepared-statement-per-connection-size: 20
+            time-between-eviction-runs-millis: 60000
+            min-evictable-idle-time-millis: 300000
+            validation-query: SELECT 1 FROM DUAL
+            test-while-idle: true
+            test-on-borrow: false
+            test-on-return: false
+            stat-view-servlet:
+                enabled: true
+                url-pattern: /druid/*
+            filter:
+                stat:
+                    log-slow-sql: true
+                    slow-sql-millis: 1000
+                    merge-sql: true
+                wall:
+                    config:
+                        multi-statement-allow: true

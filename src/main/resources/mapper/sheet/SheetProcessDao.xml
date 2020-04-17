@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dutyMS.modules.sheet.dao.SheetProcessDao">
+    <update id="updateProcessStartId" parameterType="com.dutyMS.modules.sheet.entity.SheetProcessEntity">
+      update sheet_process set process_start_id = #{processId} where process_id = #{processId}
+    </update>
+    <select id="selectBySheetId" resultType="com.dutyMS.modules.sheet.entity.SheetProcessEntity">
+        select * from sheet_process where sheet_id = #{sheetId} and rownum = 1
+    </select>
+    <select id="queryProcessBySheetNo" resultType="com.dutyMS.modules.sheet.entity.SheetProcessEntity">
+        select * from sheet_process sp where sheet_id = #{id} and rownum = 1
+        order by process_id desc
+    </select>
+    <select id="queryProcess" resultType="com.dutyMS.modules.sheet.bo.ProcessInfoBo">
+        select * from sheet_process where sheet_id = #{sheetId} order by operation_time
+    </select>
+</mapper>

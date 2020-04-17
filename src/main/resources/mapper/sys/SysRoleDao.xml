@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dutyMS.modules.sys.role.dao.SysRoleDao">
+
+	<!-- 查询用户创建的角色ID列表 -->
+	<select id="queryRoleIdList" resultType="long">
+		select role_id from sys_role where create_user_id = #{createUserId}
+	</select>
+
+	<select id="count" resultType="java.lang.Integer">
+		select
+		count(role_id)
+		from sys_role su
+		<where>
+			<if test="roleName != null and roleName != ''">
+				and role_name like '%'||#{roleName}||'%'
+			</if>
+			<if test="operatorId != null">
+				and create_user_id = #{operatorId}
+			</if>
+		</where>
+	</select>
+
+	<select id="listSimpleBo" resultType="com.dutyMS.modules.sys.role.bo.SysRoleSimpleBo">
+		SELECT * FROM
+		(SELECT
+		rownum as num,
+		su.role_id as roleId,
+		su.role_name as roleName,
+		su.remark,
+		su.create_time as createTime,
+		su.create_user_id as createUserId
+		FROM sys_role su
+		<where>
+			<if test="roleName != null and roleName != ''">
+				and role_name like '%'||#{roleName}||'%'
+			</if>
+			<if test="operatorId != null">
+				and create_user_id = #{operatorId}
+			</if>
+		</where> ) t
+		<if test="limit != -1">
+			WHERE t.num &gt; #{start}
+			AND t.num &lt;= #{start}+#{limit}
+		</if>
+	</select>
+
+	<select id="queryByRoleName" resultType="com.dutyMS.modules.sys.role.entity.SysRoleEntity">
+		select
+			su.role_id as roleId,
+			su.role_name as roleName,
+			su.remark,
+			su.create_time as createTime,
+			su.create_user_id as createUserId
+		from sys_role su
+		where role_name = #{roleName}
+	</select>
+	<select id="querySendObj" resultType="com.dutyMS.modules.sys.role.entity.SysRoleEntity">
+		select * from sys_role where role_id != 1
+	</select>
+	<select id="queryRoleById" parameterType="java.lang.String" resultType="com.dutyMS.modules.sys.user.entity.SysUserEntity">
+		select * from sys_user su
+       left join sys_user_role sur on su.user_id = sur.user_id
+       left join sys_role sr on sr.role_id = sur.role_id
+       where 1=1
+       <if test="roleId != '' and roleId !=null">
+		and   sr.role_id = #{roleId}
+	   </if>
+	</select>
+</mapper>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dutyMS.modules.sys.dictionary.dao.SysDictionaryDao">
+    <sql id="sysDictionaryBo">
+        select sd.dictionary_id as dictionaryId,
+               sd.parent_id as parentId,
+               sd.query_code as queryCode,
+               sd.name ,
+               sd.order_num     as orderNum,
+               sd.on_use     as onUse,
+               su.real_name     as createUserName,
+               sd.name as label,
+               sd.dictionary_id as value,
+               to_char(sd.create_time, 'yyyy-MM-dd HH24:mi:ss') as createTime
+        from sys_dictionary sd
+            left join sys_user su on sd.create_user_id = su.user_id
+        where sd.is_deleted = 0
+    </sql>
+    <select id="getChildDicByQueryCode" parameterType="string" resultType="com.dutyMS.modules.sys.dictionary.bo.SysDictionaryBo">
+        select sda.dictionary_id as dictionaryId,
+        sda.name,
+        sda.order_num     as orderNum
+        from sys_dictionary sda
+        where sda.is_deleted = 0
+        and sda.on_use = 0
+        and sda.parent_id = (
+        select sdb.dictionary_id
+        from sys_dictionary sdb
+        where sdb.query_code = #{queryCode}
+        and sdb.is_deleted = 0
+        and sdb.on_use = 0
+        and rownum = 1)
+        order by sda.order_num
+    </select>
+    <select id="getDicByParentId" resultType="com.dutyMS.modules.sys.dictionary.bo.SysDictionaryBo">
+        <include refid="sysDictionaryBo"/>
+        and sd.parent_id = #{parentId} order by sda.order_num desc
+    </select>
+    <select id="getAllDic" parameterType="java.lang.String" resultType="com.dutyMS.modules.sys.dictionary.bo.SysDictionaryBo">
+        <include refid="sysDictionaryBo"/>
+    </select>
+    <select id="countByQueryCode" resultType="integer" parameterType="string">
+        select count(1) from sys_dictionary where query_code = #{queryCode}
+    </select>
+    <update id="deleteInfoById" parameterType="string">
+        update sys_dictionary set is_deleted = 1 where dictionary_id = #{dictionaryId} or parent_id = #{dictionaryId}
+    </update>
+    <update id="enabledById">
+        update sys_dictionary set on_use = #{onUse} where dictionary_id = #{dictionaryId}
+    </update>
+
+    <select id="queryDepartmentList" parameterType="java.lang.String" resultType="com.dutyMS.modules.sys.dictionary.bo.SysDictionaryBo">
+        select sd.dictionary_id as dictionaryId,
+               sd.parent_id as parentId,
+               sd.query_code as queryCode,
+               sd.name ,
+               sd.order_num     as orderNum,
+               sd.on_use     as onUse,
+               su.real_name     as createUserName,
+               sd.name as label,
+               sd.dictionary_id as value,
+               to_char(sd.create_time, 'yyyy-MM-dd HH24:mi:ss') as createTime
+        from sys_dictionary sd
+            left join sys_user su on sd.create_user_id = su.user_id
+        where sd.is_deleted = 0
+        and sd.query_code like #{code}||'%' and query_code != #{code}
+    </select>
+</mapper>

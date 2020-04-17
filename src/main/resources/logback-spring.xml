@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml" />
+    <logger name="org.springframework.web" level="INFO"/>
+    <logger name="org.springboot.sample" level="TRACE" />
+
+    <!--&lt;!&ndash; 开发、测试环境 &ndash;&gt;-->
+    <!--<springProfile name="dev,test">-->
+        <!--<logger name="org.springframework.web" level="INFO"/>-->
+        <!--<logger name="org.springboot.sample" level="INFO" />-->
+        <!--<logger name="com.dutyMS" level="DEBUG" />-->
+    <!--</springProfile>-->
+
+    <!--&lt;!&ndash; 生产环境 &ndash;&gt;-->
+    <!--<springProfile name="prod">-->
+        <!--<logger name="org.springframework.web" level="ERROR"/>-->
+        <!--<logger name="org.springboot.sample" level="ERROR" />-->
+        <!--<logger name="com.dutyMS" level="ERROR" />-->
+    <!--</springProfile>-->
+
+    <!--<appender name="fileInfoLog" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+        <!--<filter class="ch.qos.logback.classic.filter.LevelFilter">-->
+            <!--<level>INFO</level>-->
+            <!--<onMatch>DENY</onMatch>-->
+            <!--<onMismatch>ACCEPT</onMismatch>-->
+        <!--</filter>-->
+        <!--<encoder>-->
+            <!--<pattern>-->
+                <!--%msg%n-->
+            <!--</pattern>-->
+        <!--</encoder>-->
+        <!--&lt;!&ndash;滚动策略&ndash;&gt;-->
+        <!--<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+            <!--&lt;!&ndash;路径&ndash;&gt;-->
+            <!--<fileNamePattern>D://log/info.%d.log</fileNamePattern>-->
+            <!--&lt;!&ndash;日志文件保留天数&ndash;&gt;-->
+            <!--<MaxHistory>3</MaxHistory>-->
+        <!--</rollingPolicy>-->
+    <!--</appender>-->
+
+
+    <appender name="fileErrorLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <encoder>
+            <pattern>
+                %msg%n
+            </pattern>
+        </encoder>
+        <!--滚动策略-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--路径-->
+            <!--服务上线放开此目录-->
+             <fileNamePattern>/home/logs/duty_log/error.%d.log</fileNamePattern>
+            <!--同步接口上线放开此目录-->
+            <!--<fileNamePattern>/home/syncman/sync_log/error.%d.log</fileNamePattern>-->
+            <!--本地测试目录-->
+            <!--<fileNamePattern>D://云医护日志/error.%d.log</fileNamePattern>&lt;!&ndash;本地测试目录&ndash;&gt;-->
+            <!--日志文件保留天数-->
+            <MaxHistory>15</MaxHistory>
+
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+        <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+        <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%thread] [%-5level] %logger{50} - %msg%n</pattern>
+        <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+<!--webSocket日志单独存放                 Start-->
+    <appender name="SOCKET_LOG_INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <encoder>
+            <pattern>
+                %msg%n
+            </pattern>
+        </encoder>
+        <!--滚动策略-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--路径-->
+            <!--服务上线放开此目录-->
+             <fileNamePattern>/home/logs/duty_log/socket_info.%d.log</fileNamePattern>
+            <!--本地测试目录-->
+            <!--<fileNamePattern>D://SOCKET_LOG/info.%d.log</fileNamePattern>-->
+            <!--日志文件保留天数-->
+            <MaxHistory>15</MaxHistory>
+
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%thread] [%-5level] %logger{50} - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="SOCKET_LOG_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <encoder>
+            <pattern>
+                %msg%n
+            </pattern>
+        </encoder>
+        <!--滚动策略-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--路径-->
+            <!--服务上线放开此目录-->
+             <fileNamePattern>/home/logs/duty_log/socket_error.%d.log</fileNamePattern>
+            <!--本地测试目录-->
+            <!--<fileNamePattern>D://SOCKET_LOG/error.%d.log</fileNamePattern>-->
+            <!--日志文件保留天数-->
+            <MaxHistory>15</MaxHistory>
+
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%thread] [%-5level] %logger{50} - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!--需要将日志单独输出的包路径-->
+    <logger name="com.dutyMS.im" additivity="false">
+        <appender-ref ref="SOCKET_LOG_INFO"/>
+        <appender-ref ref="SOCKET_LOG_ERROR"/>
+    </logger>
+
+    <!--webSocket日志单独存放                 END-->
+
+    <root level="info">
+        <!--<appender-ref ref="fileInfoLog" />&lt;!&ndash;INFO级别日志输出&ndash;&gt;-->
+        <appender-ref ref="fileErrorLog" />
+
+        <appender-ref ref="SOCKET_LOG_INFO"/>
+        <appender-ref ref="SOCKET_LOG_ERROR"/>
+
+    </root>
+
+</configuration>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dutyMS.modules.sheet.dao.SheetDao">
+    <select id="querySheetInfo" parameterType="com.dutyMS.modules.sheet.bo.QuerySheetBo" resultType="com.dutyMS.modules.sheet.bo.SheetQueryBo">
+      select
+        es.id as id,
+        es.sheet_no as sheetNo,
+        es.sheet_theme as sheetTheme,
+        es.happen_time as happenTime,
+        es.relation_department as relationDepartment,
+        es.reflection_problem as reflectionProblem,
+        es.send_person as sendPerson,
+        es.sheet_link as sheetLink,
+        sr.region_name as city,
+        es.sheet_type as sheetType,
+        es.relation_person as relationPerson,
+        es.reflection_time as reflectionTime,
+        es.relation_event as relationEvent,
+        es.enclosure_url as enclosureUrl,
+        es.resolve_time as resolveTime,
+        es.is_over_time as isOverTime,
+        ps.status_name as currentStatus,
+        es.create_person_id as createPersonId,
+        es.create_person_name as createPersonName,
+        es.create_time as createTime,
+        es.file_person_id as filePersonId,
+        es.file_person_name as filePersonName,
+        es.file_time as fileTime,
+        es.file_suggestion as fileSuggestion,
+        cse.node_person_id as nodePersonId,
+        cse.node_person_name as nodePersonName,
+        cse.current_status as statusCode
+        from ethos_sheet_info es left join sys_region_city sr
+        on es.city = to_char(sr.region_id)
+        left join process_status ps on es.current_status = ps.status_code
+        left join (select * from sheet_process sp where rownum = 1
+        order by process_id desc ) cse
+        on es.id = cse.sheet_id
+      where 1=1
+      <if test="startDate !=null and startDate != ''">
+          and es.create_time >= to_date(#{startDate}, 'yyyy-MM-dd HH24:mi:ss')
+      </if>
+      <if test="endDate != null and endDate !=''">
+          and to_date(#{endDate}, 'yyyy-MM-dd HH24:mi:ss') >= es.create_time
+      </if>
+      <if test="belongToCity != null and belongToCity !=''">
+          and es.city = #{belongToCity}
+      </if>
+      <if test="sheetStatus != null and sheetStatus !=''">
+        and es.current_status BETWEEN 101 and 103
+      </if>
+      <if test="sheetNo !=null and sheetNo != ''">
+        and es.sheet_no = #{sheetNo}
+      </if>
+      <if test="userId !=null and userId !=''">
+        and cse.node_person_id = #{userId}
+      </if>
+    </select>
+
+    <select id="queryCitys" resultType="com.dutyMS.modules.sys.region.entity.SysRegionEntity">
+        select * from sys_region_city order by region_id
+    </select>
+  
+  <select id="getSheetNoById" parameterType="java.lang.String" resultType="java.lang.String">
+    select city_str from sys_region_city where region_id = #{regionId}
+  </select>
+
+  <select id="getSheetCountByCity" parameterType="java.lang.String" resultType="java.lang.Long">
+    select count(*) from ethos_sheet_info where create_person_city = #{regionId}
+  </select>
+  <select id="queryBySheetNo" resultType="com.dutyMS.modules.sheet.entity.SheetEntity">
+    select * from ethos_sheet_info where sheet_no = #{sheetNo}
+  </select>
+  <update id="updateStatusBySheetId" parameterType="java.lang.Long">
+    update ethos_sheet_info set current_status = #{statusCode} where id=#{sheetId}
+  </update>
+  <select id="querySheetById" resultType="com.dutyMS.modules.sheet.entity.SheetEntity">
+    select * from ethos_sheet_info where id = #{sheetId}
+  </select>
+</mapper>
