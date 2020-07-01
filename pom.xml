@@ -22,7 +22,7 @@
         <mybatisplus.version>2.3</mybatisplus.version>
         <mysql.version>5.1.38</mysql.version>
         <druid.version>1.1.9</druid.version>
-        <quartz.version>2.3.0</quartz.version>
+        <quartz.version>2.3.2</quartz.version>
         <commons.lang.version>2.6</commons.lang.version>
         <commons.fileupload.version>1.2.2</commons.fileupload.version>
         <commons.io.version>2.5</commons.io.version>
@@ -128,7 +128,7 @@
         <dependency>
             <groupId>org.quartz-scheduler</groupId>
             <artifactId>quartz</artifactId>
-            <version>2.2.3</version>
+            <version>2.3.2</version>
         </dependency>
         <dependency>
             <groupId>org.quartz-scheduler</groupId>
